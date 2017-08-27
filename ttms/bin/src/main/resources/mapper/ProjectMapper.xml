@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+ 
+<mapper namespace="cn.tedu.ttms.project.dao.ProjectDAO">
+	<insert id="InsertObject" parameterType="cn.tedu.ttms.project.entity.Project">INSERT INTO tms_projects VALUES(#{id},#{code},#{name},#{beginDate},#{endDate},#{valid},#{note},NOW(),NOW(),#{createdUser},#{modifiedUser})</insert>
+	<!-- 分页查询项目信息 -->
+	<select id="FindPageObjects" resultType="cn.tedu.ttms.project.entity.Project" parameterType="cn.tedu.ttms.common.entity.PageObject">SELECT * FROM tms_projects LIMIT #{startCount},#{pagesSize}</select>	
+	<!-- 查询项目信息 -->
+	<select id="FindAllObjects" resultType="cn.tedu.ttms.project.entity.Project">SELECT * FROM tms_projects</select>
+	<!-- 查询总记录数 -->
+	<select id="countObjects" resultType="java.lang.Integer">SELECT COUNT(*) FROM tms_projects</select>
+	<!-- 点击查询按钮查询项目 -->
+	<select id="FindSomeObjects" resultType="cn.tedu.ttms.project.entity.Project">
+		SELECT * FROM tms_projects p
+			<where>
+				<if test="project.name!='' and project.name!=null">
+					AND p.name like CONCAT('%',#{project.name},'%')
+				</if>
+				<if test="project.valid!=null">
+					AND p.valid=#{project.valid}
+				</if>
+			</where>  
+			ORDER BY p.beginDate DESC 
+			LIMIT #{pageObject.startCount},#{pageObject.pagesSize}
+	</select>
+	<select id="countSomeObjects" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM tms_projects p
+			<where>
+				<if test="project.name!='' and project.name!=null">
+					AND p.name like CONCAT('%',#{project.name},'%')
+				</if>
+				<if test="project.valid!=null">
+					AND p.valid=#{project.valid}
+				</if>
+			</where>
+	</select>
+	<select id="FindById" parameterType="int" resultType="cn.tedu.ttms.project.entity.Project">SELECT * FROM tms_projects WHERE ID=#{id}</select>
+	<update id="ValidById">UPDATE tms_projects SET VALID=#{valid}
+		<where>
+			<if test="ids!='' and ids!=null">
+				AND ID in
+				<foreach collection="ids" open="(" separator="," close=")" item="item">
+					#{item}
+				</foreach>
+			</if>
+		</where>
+	</update>
+	<update id="UpdateObjects" parameterType="cn.tedu.ttms.project.entity.Project">UPDATE tms_projects SET NAME=#{name},beginDate=#{beginDate},endDate=#{endDate},valid=#{valid},note=#{note}</update>
+	<insert id="saveProject" parameterType="cn.tedu.ttms.project.entity.Project">INSERT INTO tms_projects (code,name,beginDate,endDate,valid,note) VALUES(#{code},#{name},#{beginDate},#{endDate},#{valid},#{note})</insert>
+</mapper>

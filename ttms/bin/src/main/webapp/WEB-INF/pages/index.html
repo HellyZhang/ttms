@@ -1,0 +1,78 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<c:set var="basePath" value="${pageContext.request.contextPath }"/>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>TPMS旅游管理系统</title>
+	<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+	<script>
+   		 $(function(){
+   			getAllObjects2();
+   		 });
+   		 function getAllObjects(){
+   			 $.ajax({
+   				 url:"getObjects.do",
+   				 type:"post",
+   				 dataType:"json",
+   				 success:function(data){
+   					 for(var i in data){
+   						alert(data[i].toString());
+   						var str ="<td>"+data[i].code+"</td><td>"+data[i].name+"</td><td>"+data[i].beginDate+"</td><td>"+data[i].endDate+"</td><td>"+data[i].note+"</td>";
+   						$("#projects").append($("<tr>"+str+"</tr>"));
+   					 }
+   					 
+   				 }
+   			 });
+   		 }
+   		 function getAllObjects2(){
+   			 $.getJSON("getObjects.do",function(data){
+   				for(var i in data){
+						alert(data[i].toString());
+						var str ="<td>"+data[i].code+"</td><td>"+data[i].name+"</td><td>"+data[i].beginDate+"</td><td>"+data[i].endDate+"</td><td>"+data[i].note+"</td>";
+						$("#projects").append($("<tr>"+str+"</tr>"));
+					 }
+   			 });
+   		 }
+	</script>
+</head>
+<body class="theme-dark ">
+<div id="container">
+	<div id="sidebar" class="sidebar-fixed">
+		<div id="sidebar-content"></div>
+	</div>		
+	<div id="content">
+
+	</div>
+</div>	
+
+<!-- 公共编辑对话框 -->
+
+<div class="modal fade" id="modifyDialog" tabindex="-1" role="dialog"  aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg"  role="document">
+        <div class="modal-content">
+            <div class="modal-header" >
+                <button type="button" class="close" data-dismiss="modal">
+                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">窗口标题</h4>
+            </div>
+            <div class="modal-body" >
+            	<table id="projects" border="1px">
+            		<tr>
+            			<td>code</td>
+            			<td>name</td>
+            			<td>beginDate</td>
+            			<td>endDate</td>
+            			<td>note</td>
+            		</tr>
+            	</table>
+            </div>
+	        <div class="modal-footer">
+		       <button type="button" class="btn btn-default cancel" data-dismiss="modal">取消</button>
+		       <button type="button" class="btn btn-primary ok">确定</button>
+		    </div>
+       </div>
+    </div>
+</div>
+</body>
+</html>

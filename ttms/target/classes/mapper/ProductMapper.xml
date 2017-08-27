@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.ttms.product.dao.ProductTypeDAO">
+	<select id="findObjects" resultType="map">
+		SELECT c.*,p.name parentName FROM  tms_classes c LEFT OUTER JOIN tms_classes p ON c.parentId = p.id
+	</select>
+	<select id="selectParenType" resultType="map">SELECT id,name,parentId FROM tms_classes</select>
+	<insert id="InsertObjects" parameterType="cn.tedu.ttms.product.entity.ProductType">INSERT INTO tms_classes
+		        (name,parentId,sort,note,createdUser,createdTime,modifiedUser,modifiedTime) 
+		VALUES(#{name},#{parentId},#{sort},#{note},#{createdUser},NOW(),#{modifiedUser},NOW())
+	</insert>
+	<select id="findObjectById" resultType="map" parameterType="Integer">SELECT c.*,p.name parentName FROM tms_classes c LEFT JOIN tms_classes p 
+			ON c.parentId = p.id or c.parentId=NULL  WHERE c.id=#{id}
+	 </select>
+	<update id="updateObjects" parameterType="cn.tedu.ttms.product.entity.ProductType">UPDATE tms_classes SET name=#{name},parentId=#{parentId},sort=#{sort},note=#{note} WHERE id=#{id}</update>
+	<delete id="deleteById" parameterType="Integer">DELETE FROM tms_classes WHERE id=#{id}</delete>
+	<select id="findChilds" parameterType="Integer" resultType="Integer">
+		SELECT COUNT(*) FROM tms_classes WHERE parentId = #{id}
+	</select>
+</mapper>

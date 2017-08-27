@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.ttms.attachment.dao.AttachementDAO">
+	<select id="findObjectByDigest" resultType="int">
+		SELECT COUNT(*) FROM tms_attachements WHERE fileDigest=#{fileDigest};
+	</select>
+	<insert id="insertObject" parameterType="cn.tedu.ttms.attachment.entity.Attachement">
+		INSERT INTO tms_attachements(title,fileName,contentType,filePath,fileDigest,athType,belongId,createdUser,createdTime,modifiedUser,modifiedTime) 
+		VALUES(#{title},#{fileName},#{contentType},#{filePath},#{fileDigest},#{athType},#{belongId},#{createdUser},NOW(),#{modifiedUser},NOW())
+	</insert>
+	<select id="findObjects" resultType="cn.tedu.ttms.attachment.entity.Attachement">
+		SELECT * FROM tms_attachements
+	</select>
+	<!-- 批量下载 -->
+	<select id="findObjectByIds" resultType="cn.tedu.ttms.attachment.entity.Attachement">SELECT * FROM tms_attachements 
+		<where>
+			<if test="ids!=null and ids!=''"></if>
+				AND id in
+				<foreach collection="ids" item="item" >
+					#{item}
+				</foreach>
+		</where>
+ 	</select>
+ 	<!-- 根据ID下载 -->
+ 	<select id="findObjectById" resultType="cn.tedu.ttms.attachment.entity.Attachement" parameterType="Integer">
+ 		SELECT * FROM tms_attachements WHERE ID=#{ID}
+ 	</select>
+</mapper>
